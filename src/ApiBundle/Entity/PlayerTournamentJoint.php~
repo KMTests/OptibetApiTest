@@ -1,0 +1,47 @@
+<?php
+
+namespace ApiBundle\Entity;
+
+use ApiBundle\Entity\Traits\IdTrait;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Class PlayerTournamentJoint
+ * @package ApiBundle\Entity
+ * @ORM\Entity
+ * @ORM\Table(name="player_tournament_joint")
+ */
+class PlayerTournamentJoint {
+
+    use IdTrait;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Tournament", inversedBy="players")
+     * @ORM\JoinColumn(name="tournament_id", referencedColumnName="id")
+     */
+    protected $tournament;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Player", inversedBy="tournaments")
+     * @ORM\JoinColumn(name="player_id", referencedColumnName="id")
+     */
+    protected $player;
+
+    /**
+     * @ORM\Column(type="integer", name="bonus_points_frozen")
+     */
+    protected $amountFrozen = 0;
+
+    /**
+     * @ORM\OneToMany(targetEntity="TournamentBackers", mappedBy="tournament")
+     */
+    protected $backers;
+
+    /**
+     * PlayerTournamentJoint constructor.
+     */
+    public function __construct() {
+        $this->backers = new ArrayCollection();
+    }
+}

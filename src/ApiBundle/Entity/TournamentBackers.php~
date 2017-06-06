@@ -1,0 +1,35 @@
+<?php
+
+namespace ApiBundle\Entity;
+
+use ApiBundle\Entity\Traits\IdTrait;
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Class TournamentBackers
+ * @package ApiBundle\Entity
+ * @ORM\Entity
+ * @ORM\Table(name="tournament")
+ */
+class TournamentBackers {
+
+    use IdTrait;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="PlayerTournamentJoint", inversedBy="backers")
+     * @ORM\JoinColumn(name="backer_id", referencedColumnName="id")
+     */
+    protected $tournament;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Player", inversedBy="backing")
+     * @ORM\JoinColumn(name="tournament_backer_id", referencedColumnName="id")
+     */
+    protected $backer;
+
+    /**
+     * @ORM\Column(type="integer", name="amount_backed")
+     */
+    protected $amount;
+    
+}

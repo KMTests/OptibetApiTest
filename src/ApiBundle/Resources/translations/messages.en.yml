@@ -1,0 +1,6 @@
+exception.type.not_implemented: 501 Not Implemented
+
+exception.request.content-type.not_implemented:
+    Content type {{ content_type }} not implemented yet please use {{ default_content_type }}
+
+validation.error: Validation Error

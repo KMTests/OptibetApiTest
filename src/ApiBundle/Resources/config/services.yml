@@ -1,0 +1,53 @@
+services:
+    api.resource.director:
+        class: ApiBundle\ApiResources\ApiResourceDirector
+        arguments:
+            - "@api.request.factory"
+            - "@validator"
+            - "@api.response.factory"
+            - "@doctrine.orm.entity_manager"
+            - "@api.controller.exposed_container"
+
+    api.request.factory:
+        class: ApiBundle\ApiResources\RequestFactory\ApiRequestFactory
+        arguments: ["@api.request.resolver"]
+
+    api.request.resolver:
+        class: ApiBundle\ApiResources\RequestFactory\RequestResolverSymfony
+        arguments: ["@request_stack", "%default_content_type%"]
+
+    api.response.factory:
+        class: ApiBundle\ApiResources\ResponseBuilder\ApiResponseFactory
+
+    api.response.builder:
+        class: ApiBundle\ApiResources\ResponseBuilder\ApiResponseBuilder
+        arguments:
+            - "@api.response.factory"
+            - "@api.request.resolver"
+            - "@translator"
+            - "@api.controller.builder"
+
+    api.controller.exposed_container:
+        class: ApiBundle\ApiResources\ControllerBuilder\ExposedContainer
+
+    api.controller.builder:
+        class: ApiBundle\ApiResources\ControllerBuilder\ApiControllerBuilder
+        arguments:
+            - "@api.controller.exposed_container"
+            - "@api.resource.director"
+            - "@service_container"
+            - "@doctrine.orm.entity_manager"
+
+    api.controller.listener:
+        class: ApiBundle\EventListeners\ControllerListener
+        arguments:
+            - "@api.response.builder"
+            - "@api.controller.builder"
+        tags:
+            - { name: kernel.event_listener, event: kernel.controller, method: onKernelController }
+            - { name: kernel.event_listener, event: kernel.exception, method: onKernelException }
+
+    tournament.resource.manager:
+        class: ApiBundle\Managers\TournamentManager
+        arguments:
+            - "@doctrine.orm.entity_manager"

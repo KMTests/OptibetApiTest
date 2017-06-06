@@ -1,0 +1,41 @@
+<?php
+
+namespace ApiBundle\Entity;
+
+use ApiBundle\Entity\Traits\IdTrait;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Class Player
+ * @package ApiBundle\Entity
+ * @ORM\Entity
+ * @ORM\Table(name="player")
+ */
+class Player {
+
+    use IdTrait;
+
+    /**
+     * @ORM\Column(type="integer", name="bonus_points")
+     */
+    protected $bonusPoints = 0;
+
+    /**
+     * @ORM\OneToMany(targetEntity="PlayerTournamentJoint", mappedBy="player")
+     */
+    protected $tournaments;
+
+    /**
+     * @ORM\OneToMany(targetEntity="TournamentBackers", mappedBy="backer")
+     */
+    protected $backing;
+
+    /**
+     * Player constructor.
+     */
+    public function __construct() {
+        $this->tournaments = new ArrayCollection();
+        $this->backing = new ArrayCollection();
+    }
+}

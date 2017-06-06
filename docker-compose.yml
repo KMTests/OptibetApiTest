@@ -1,0 +1,32 @@
+version: '2'
+
+services:
+  nginx:
+    image: nginx
+    ports:
+      - 8086:80
+    volumes:
+      - ./:/var/www/optibet_test
+      - ./docker/nginx/nginx.conf:/etc/nginx/conf.d/default.conf
+    links:
+      - fpm
+
+  fpm:
+    build: docker/php-fpm/
+    links:
+      - mysql
+    volumes:
+      - ./:/var/www/optibet_test
+      - ./docker/php-fpm/php-ini-overrides.ini:/usr/local/etc/php/conf.d/99-overrides.ini
+
+  mysql:
+    image: mysql
+    environment:
+      MYSQL_DATABASE: optibet-test
+      MYSQL_USER: optibet
+      MYSQL_PASSWORD: optibet
+      MYSQL_ROOT_PASSWORD: password
+    volumes:
+      - ./docker/mysql/data:/var/lib/mysql
+    ports:
+      - 3306:3306
